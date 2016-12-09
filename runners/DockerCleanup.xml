@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE build-type SYSTEM "../../../project-config.dtd">
+
+<build-type>
+  <name>Docker Cleanup</name>
+  <description />
+  <settings>
+    <parameters>
+      <param name="system.docker.label" value="dk.umwelt.build" spec="text description='Name of label used for related containers' display='normal' label='Label Name:' validationMode='any'" />
+      <param name="system.docker.compose.project" value="%system.teamcity.buildType.id%-%system.build.number%" spec="text description='Project name and label used for related containers' display='normal' label='Project Name:' validationMode='any'" />
+      <param name="system.docker.tag" value="%env.DOCKER_TAG%" spec="text description='Docker tag to clean up containers for' display='normal' label='Tag:' validationMode='any'" />
+    </parameters>
+    <build-runners>
+      <runner id="RUNNER_14" name="" type="Ant">
+        <parameters>
+          <param name="build-file"><![CDATA[<project name="Docker Cleanup">
+<target name="cleanup">
+  <exec executable="teamcity-steps" osfamily="linux">
+    <arg value="docker"/>
+    <arg value="cleanup"/>
+    <arg value="--label=${docker.label}"/>
+    <arg value="--project-name=${docker.compose.project}"/>
+    <arg value="--tag=${docker.tag}"/>
+  </exec>
+  <exec executable="teamcity-steps.exe" osfamily="windows">
+    <arg value="docker"/>
+    <arg value="cleanup"/>
+    <arg value="--label=${docker.label}"/>
+    <arg value="--project-name=${docker.compose.project}"/>
+    <arg value="--tag=${docker.tag}"/>
+  </exec>
+</target>
+</project>]]></param>
+          <param name="build-file-path" value="build.xml" />
+          <param name="target" value="cleanup" />
+          <param name="teamcity.step.mode" value="default" />
+          <param name="use-custom-build-file" value="true" />
+        </parameters>
+      </runner>
+    </build-runners>
+    <requirements>
+      <exists name="docker" />
+    </requirements>
+  </settings>
+</build-type>

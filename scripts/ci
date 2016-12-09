@@ -1,0 +1,6 @@
+#!/bin/bash
+docker run --rm \
+  -v $(PWD):/go/src/app  \
+  --workdir=/go/src/app \
+  golang:1.7 \
+  ./scripts/build.sh
